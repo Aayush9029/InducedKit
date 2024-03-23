@@ -82,7 +82,6 @@ public class InducedVM {
         let requestBody = RequestBody(task: searchTerm)
         do {
             request.httpBody = try encoder.encode(requestBody)
-            logger.debug("Request body encoded successfully.")
         } catch {
             logger.error("Error serializing request body: \(error.localizedDescription)")
             return
@@ -168,8 +167,6 @@ extension InducedVM {
     /// Listens for incoming WebSocket messages.
     private func listen() {
         connected = true
-        logger.debug("WebSocket listening for messages.")
-
         webSocketTask?.receive { [weak self] result in
             switch result {
             case .failure(let error):
@@ -189,7 +186,6 @@ extension InducedVM {
     /// Handles text messages received through the WebSocket.
     /// - Parameter text: The text message received.
     private func handleTextMessage(_ text: String) {
-        logger.debug("Received text message from WebSocket.")
         if let data = text.data(using: .utf8),
            let decodedData = try? decoder.decode(WebsocketResponse.self, from: data),
            let imageData = Data(base64Encoded: decodedData.data)
@@ -199,8 +195,6 @@ extension InducedVM {
             #else
             image = UIImage(data: imageData)
             #endif
-
-            logger.info("Image data processed successfully.")
         } else {
             logger.error("Failed to decode the received message: \(text)")
         }
