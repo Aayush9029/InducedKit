@@ -4,20 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "Induced",
+    name: "InducedKit",
     platforms: [
         .iOS(.v17),
         .macOS(.v14),
     ],
     products: [
         .library(
-            name: "Induced",
-            targets: ["Induced"]),
+            name: "InducedKit",
+            targets: ["InducedKit"]),
     ],
     targets: [
         .target(
-            name: "Induced"),
+            name: "InducedKit"),
         .testTarget(
             name: "InducedTests",
-            dependencies: ["Induced"]),
+            dependencies: ["InducedKit"]),
     ])

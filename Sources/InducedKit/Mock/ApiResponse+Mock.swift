@@ -16,6 +16,6 @@ extension ApiResponse {
             watchUrl: "https://watch.induced.ai/watch/browser_xyZ123"
         ),
         requestId: "req_67890",
-        timeTaken: 567
+        timeTaken: 562
     )
 }
