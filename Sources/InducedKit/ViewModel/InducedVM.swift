@@ -111,8 +111,6 @@ public class InducedVM {
             return
         }
 
-        logger.info("Fetching run status for ID: \(browserID).")
-
         guard let url = Constants.runStatusURL(browserID) else {
             logger.error("Invalid URL for fetching run status.")
             return
