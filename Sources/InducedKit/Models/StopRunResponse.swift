@@ -9,7 +9,7 @@ import Foundation
 
 /// `StopRunResponse` is returned when /autonomous/{id}/stop is called.
 public struct StopRunResponse: Codable {
-    let success: Bool
-    let requestId: String
-    let timeTaken: Int
+    public let success: Bool
+    public let requestId: String
+    public let timeTaken: Int
 }

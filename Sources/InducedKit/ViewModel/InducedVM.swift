@@ -57,6 +57,7 @@ public class InducedVM {
     /// Prepares the ViewModel for a new session.
     public func newSession() {
         disconnectWebsocket()
+        Task { await stopRun() }
         browserID = nil
 
         loading = false
@@ -100,6 +101,51 @@ public class InducedVM {
 
         } catch {
             logger.error("Failed to start session: \(error.localizedDescription)")
+        }
+    }
+
+    @MainActor
+    public func stopRun() async {
+        guard let browserID = browserID else {
+            logger.error("Browser ID is not available.")
+            return
+        }
+
+        guard let url = Constants.endBrowserSessionURL(browserID) else {
+            logger.error("Invalid URL for stopping the run.")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue(apiKey, forHTTPHeaderField: "x-api-key")
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                logger.error("Error getting HTTP response.")
+                return
+            }
+
+            guard httpResponse.statusCode == 200 else {
+                logger.error("Failed to stop run, received HTTP status code: \(httpResponse.statusCode)")
+
+                if let errorResponse = try? decoder.decode(StopRunResponse.self, from: data) {
+                    logger.error("Error details: \(errorResponse.requestId) - \(errorResponse.success)")
+                }
+                return
+            }
+
+            guard let stopResponse = try? decoder.decode(StopRunResponse.self, from: data) else {
+                logger.error("Failed to decode stop run response.")
+                return
+            }
+
+            logger.info("Run successfully stopped for ID: \(browserID). Request ID: \(stopResponse.requestId), Time taken: \(stopResponse.timeTaken) seconds.")
+
+        } catch {
+            logger.error("Error stopping run: \(error.localizedDescription)")
         }
     }
 

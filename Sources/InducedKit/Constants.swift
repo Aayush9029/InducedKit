@@ -19,4 +19,8 @@ enum Constants {
     static func websocketURL(_ id: String) -> URL? {
         URL(string: "wss://\(id.lowercased()).chromebrowser.stream")
     }
+
+    static func endBrowserSessionURL(_ browserID: String) -> URL? {
+        return URL(string: "\(base)/autonomous/\(browserID)/stop")
+    }
 }
